@@ -1,4 +1,4 @@
-# Tutorial-AndroidNetworkInterception <!-- omit in toc -->
+# Tutorial: Android Network Traffic Interception <!-- omit in toc -->
 How to intercept network trafic on Android 
 
 |         |           |
@@ -164,11 +164,15 @@ Spawned `com.android.chrome`. Resuming main thread!
 ...
 ```
 
+If everything is working as expected, you should now see `POST` and `GET` on Fiddler's windows. On Fiddler, select the packets you want and export them to latter inspect them.
+
+![Fiddler example](imgs/Fiddler-post.png)
+
 > ***NOTE***
 >
-> Frida is able to avoid certificate pinning from many Android apps, but not all of them. For example, Tiktok is known to have implemented some technics against Frida and other similar tools.
+> Frida is able to avoid certificate pinning from many Android apps, **but not all of them**. For example, Tiktok is known to have implemented some technics against Frida and other similar tools.
 >
-> If the certificate pinning bypass is not working for your mobile app, try to:
+> If the certificate pinning bypass is not working for your mobile app, try:
 >
 > - with an older version of the app itself,
 > - or, run it with an older version of Android.
