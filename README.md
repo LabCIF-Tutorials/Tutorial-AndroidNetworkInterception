@@ -9,7 +9,7 @@ How to intercept network trafic on Android
 
 - [Requirements](#requirements)
 - [Digital Certificates](#digital-certificates)
-  - [Test configuration](#test-configuration)
+  - [Configuration overview](#configuration-overview)
 - [Bypass Certificate Pinning](#bypass-certificate-pinning)
   - [Install Frida on the PC](#install-frida-on-the-pc)
   - [Install Frida on Android](#install-frida-on-android)
@@ -20,6 +20,7 @@ How to intercept network trafic on Android
 In order to implement this tutorial you need one of these Android devices:
 
 - Android Virtual Device (AVD) -- see one of these tutorials: [Android Studio Emulator - GUI](https://labcif.github.io/AndroidStudioEmulator-GUIconfig/), or [Android Studio Emulator - command line](https://labcif.github.io/AndroidStudioEmulator-cmdConfig/) to learn how to set up an AVD;
+  - Android 10 (API version 29), or older, is recommended for this tutorial
 - or a physical smartphone with Android rooted. Rooting an Android device is beyond the scope of this tutorial, but you can read this [webpage](https://magiskmanager.com/) to learn more about it.
 
 ## Digital Certificates
@@ -34,9 +35,8 @@ In order to decrypt SSL/TLS traffic we need to install Fiddler's digital certifi
 
 - [for the computer running Fiddler proxy](https://docs.telerik.com/fiddler-everywhere/get-started/configuration)
 - [for the Android device to be intercepted](https://docs.telerik.com/fiddler-everywhere/get-started/mobile-traffic/configure-android#configure-android-device)
-  - if typing `http://ipv4.fiddler:8866` on the Android browser doesn't work, type your computer IP address instead, for example: `http://192.168.1.10:8866`
 
-### Test configuration
+### Configuration overview
 
 Now, on your computer, start Fiddler (or, other the proxy software) and make sure it is configured to capture HTTPS traffic. Go to `settings` -> `HTTPS` -> and enable `Capture HTTPS traffic` -> `Save`:
 
@@ -51,6 +51,8 @@ Then make sure your AVD has proxy enabled, here's a summary (for step by step in
 ![Manual proxy](imgs/AVD3-wifi-proxy-manual.png)
 
 ![Proxy settings](imgs/AVD4-wifi-proxy-config.png)
+
+To install Fiddler's digital certificate on Android the tutorial recommends typing `http://ipv4.fiddler:8866` on the browser. However, if that doesn't work type your computer IP address instead, for example: `http://192.168.1.10:8866`.
 
 If everything is configured correctly, open Chrome in the AVD, type something in the search bar and you should be able to see some `CONNECT` packets inside Fiddler's window.
 
@@ -69,13 +71,11 @@ If everything is configured correctly, open Chrome in the AVD, type something in
 > a40:/ # settings put global captive_portal_detection_enabled 0   
 > ```
 
-After the proxy is enabled some APPS might still not work. That happens because they are able to detect that the digital certificate we are using is not the one they expect. This technique is called **Certificate Pinning**.
-
 ## Bypass Certificate Pinning
 
-Nowadays, many websites and mobile applications use an extra step to protect their traffic from Man-in-the-middle attacks, that is called [certificate pinning](https://owasp.org/www-community/controls/Certificate_and_Public_Key_Pinning). 
+After the proxy is enabled and the digital certificates are properly configured, some APPS might still not work. That happens because they are able to detect that the digital certificate we are using is not the one they expect. This technique is called [certificate pinning](https://owasp.org/www-community/controls/Certificate_and_Public_Key_Pinning). Certificate pinning is an extra step to protect SSL/TLS network traffic from Man-in-the-middle attacks, which we are trying to do.
 
-In order to bypass certificate pinning we need to dynammicly change the network traffic. The payed version of Fiddler is able to do that, but for this purpose we can acheive the desired result with [Frida](https://frida.re/), an open source tool for dynamic interception and alteration of network traffic.
+In order to bypass certificate pinning we need to dynammicly change the network traffic. The payed version of Fiddler is able to do that, but we can acheive the desired result with [Frida](https://frida.re/), an open source tool for dynamic interception and alteration of network traffic.
 
 ### Install Frida on the PC
 
