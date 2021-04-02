@@ -34,6 +34,7 @@ In order to decrypt SSL/TLS traffic we need to install Fiddler's digital certifi
 
 - [for the computer running Fiddler proxy](https://docs.telerik.com/fiddler-everywhere/get-started/configuration)
 - [for the Android device to be intercepted](https://docs.telerik.com/fiddler-everywhere/get-started/mobile-traffic/configure-android#configure-android-device)
+  - if typing `http://ipv4.fiddler:8866` on the Android browser doesn't work, type your computer IP address instead, for example: `http://192.168.1.10:8866`
 
 ### Test configuration
 
@@ -53,7 +54,22 @@ Then make sure your AVD has proxy enabled, here's a summary (for step by step in
 
 If everything is configured correctly, open Chrome in the AVD, type something in the search bar and you should be able to see some `CONNECT` packets inside Fiddler's window.
 
-Once the proxy is enabled some APPS might not work. That happens because they are able to detect that the digital certificate we are using is not the one they expect. This technique is called **Certificate Pinning**.
+> ***NOTE 1***
+>
+> If you have a firewall running on your computer make sure you allow traffic to the proxy, _specially if you are using a physical Android device_.
+
+> ***NOTE 2***
+>
+> If you are using a physical Android device, after you configure the proxy the device may display a message similar to "Connected, but without Internet connection" and show also a `!` next to the Wifi symbol. 
+> To remove this message and the `!` do:
+>
+> ```Console
+> user@linux:AFD2$ adb shell
+> a40:/ $ su
+> a40:/ # settings put global captive_portal_detection_enabled 0   
+> ```
+
+After the proxy is enabled some APPS might still not work. That happens because they are able to detect that the digital certificate we are using is not the one they expect. This technique is called **Certificate Pinning**.
 
 ## Bypass Certificate Pinning
 
