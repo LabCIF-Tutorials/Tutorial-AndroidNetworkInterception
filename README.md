@@ -98,8 +98,12 @@ To install Frida on Android, the device must be rooted first. We are going to us
 Download the latest frida-server from [Frida’s GitHub releases](https://github.com/frida/frida/releases) page and uncompress it with [7zip](https://www.7-zip.org/download.html), or on the Linux command line:
 
 ```Console
-user@linux:AFD2$ unxz frida-server-14.2.14-android-arm64.xz
+user@linux:AFD2$ unxz frida-server-14.2.14-android-x86_64.xz
 ```
+
+> ***NOTE***
+>
+> If your are using a physical Android device, download the `arm64` version of the file, instead of `x86_64`.
 
 Now, make sure the AVD is running and push `frida-server` and run it as root:
 
