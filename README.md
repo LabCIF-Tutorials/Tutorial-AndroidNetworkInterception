@@ -26,8 +26,8 @@ In order to implement this tutorial you need one of these Android devices:
 > ***NOTE***
 >
 > The Android emulator uses the `x86`, or `x86_64` CPU instruction set. However, some APPs are compiled only for `arm`, or `arm64` CPU architectures. 
-> If the APP you are analysing does provide a version for `x86`, or `x86_64`, you need to use **Android 9** on the emulator, because this version includes a translation mechanism from `arm` instructions to `x86`. 
-> This translation mechanism is also present on Android 11, but the current version of Frida **does not work** on Android 11 (we'll discuss Frida at the end of this tutorial).
+> If the APP you are analysing does not provide a version for `x86`, or `x86_64`, you need to use **Android 9** on the emulator, because this version includes a translation mechanism from `arm` instructions to `x86`. 
+> This translation mechanism is also present on Android 11, but the current version of Frida **does not work** on Android 11 (more about Frida at the end of this tutorial).
 
 ## Digital Certificates
 
