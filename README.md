@@ -23,6 +23,12 @@ In order to implement this tutorial you need one of these Android devices:
   - Android 10 (API version 29), or older, is recommended for this tutorial
 - or a physical smartphone with Android rooted. Rooting an Android device is beyond the scope of this tutorial, but you can read this [webpage](https://magiskmanager.com/) to learn more about it.
 
+> ***NOTE***
+>
+> The Android emulator uses the `x86`, or `x86_64` CPU instruction set. However, some APPs are compiled only for `arm`, or `arm64` CPU architectures. 
+> If the APP you are analysing does provide a version for `x86`, or `x86_64`, you need to use **Android 9** on the emulator, because this version includes a translation mechanism from `arm` instructions to `x86`. 
+> This translation mechanism is also present on Android 11, but the current version of Frida **does not work** on Android 11 (we'll discuss Frida at the end of this tutorial).
+
 ## Digital Certificates
 
 To intercept the network traffic of an Android device we need a proxy. The proxy will act as Man-in-the-middle between the Android device and the servers it connects to.
@@ -41,6 +47,11 @@ In order to decrypt SSL/TLS traffic we need to install Fiddler's digital certifi
 Now, on your computer, start Fiddler (or, other the proxy software) and make sure it is configured to capture HTTPS traffic. Go to `settings` -> `HTTPS` -> and enable `Capture HTTPS traffic` -> `Save`:
 
 ![Enable HTTPS capture](imgs/fiddler-https.png)
+
+To prevent Fiddler from intercept the connections from your computer's browser disable the option `Act as system proxy on startup` and then restart Fiddler:
+
+![Disable system proxy](imgs/fiddler-proxy.png)
+
 
 Then make sure your AVD has proxy enabled, here's a summary (for step by step instructions [read this tutorial](https://docs.telerik.com/fiddler-everywhere/get-started/mobile-traffic/configure-android#configure-android-device)):
 
