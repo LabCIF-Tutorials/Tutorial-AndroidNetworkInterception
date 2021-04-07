@@ -1,0 +1,33 @@
+#1
+Verificar qual é a arquitetura de CPU suportada pela APP que está a analizar no projeto de AFD2:
+    - se for multi-plataforma (arm64-v8a, armeabi-v7a, x86, x86_64, ...) e suportar as instruções da Intel (x86) use o APK que já tem juntamente com o Android 10;
+    - se for específica para arm (arm64-v8a, armeabi-v7a, ...) verifique se existe uma versão para CPUs intel, se existir uma versão para x86, então descarregue-a e instale-a no Android 10;
+    - senão existir uma versão específica para x86, terá de usar a versão compilada para arm, mas com o **Android 9**. Esta versão possui um sistema de tradução arm -> x86 (o Android 11 tb tem este mecanismo, mas atualmente o Frida não funciona nesta versão)
+
+
+#2
+Instalar e configurar o Fiddler para interceptar as ligações do emulador:
+    - testar a ligação Internet com o Chrome no Android
+    - abrir a APP em análise e verficar se funciona:
+        - se funcionar normalmente, a APP **não** usa a técnica de "Certificate Pinning"
+        - senão funcionar, a APP **usa** a técnica de "Certificate Pinning" e tem de executar o passo #3
+        
+
+#3
+(apenas para APPs com Certificate Pinning)
+
+Se a APP em análise usar "Certificate Pinning":
+    - instalar e configurar o Frida
+    - executar os comandos necessários para ativar o Frida na APP em estudo
+    - testar novamente a APP:
+        - se funcionar, o Frida foi capaz de contornar o mecanismo de Certificate Pinning
+        - senão funcionar, a APP usa um sistema avançado de Certificate Pinning e de momento não é possível intercetar o tráfego dessa APP
+        
+#4
+Interagir com a APP e verificar o tráfego gerado:
+    - qual, ou quais, os endereços dos servidores aos quais a APP se ligou?
+    - que tipo de informação foi enviada para esses servidores?
+    
+---
+
+Resto da aula: apoio ao projeto (no meu caso o demoraram a aula toda para chegarem até ao ponto 4)

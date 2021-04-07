@@ -104,7 +104,7 @@ To install Frida on Android, the device must be rooted first. We are going to us
 
 > ***NOTE***
 >
-> Do not use the last version of Androind, for this tutorial we are going to use Android 10 (API version 29).
+> Do not use the last version of Android, for this tutorial we are going to use Android 10 (API version 29).
 
 Download the latest frida-server from [Frida’s GitHub releases](https://github.com/frida/frida/releases) page and uncompress it with [7zip](https://www.7-zip.org/download.html), or on the Linux command line:
 
