@@ -52,6 +52,9 @@ To prevent Fiddler from intercept the connections from your computer's browser d
 
 ![Disable system proxy](imgs/fiddler-proxy.png)
 
+> ***NOTE***
+>
+> If you prefer open source software, try the [mitmproxy](https://mitmproxy.org/) proxy instead of Fiddler.
 
 Then make sure your AVD has proxy enabled, here's a summary (for step by step instructions [read this tutorial](https://docs.telerik.com/fiddler-everywhere/get-started/mobile-traffic/configure-android#configure-android-device)):
 
