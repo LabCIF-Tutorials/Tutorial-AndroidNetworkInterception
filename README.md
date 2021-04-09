@@ -100,23 +100,29 @@ Or grab the binaries from [Frida’s GitHub releases](https://github.com/frida/f
 
 ### Install Frida on Android
 
-To install Frida on Android, the device must be rooted first. We are going to use Android Virtual Device (AVD).
+To install Frida on Android, the device must be rooted first. For this tutorial we are going to use an Android Virtual Device (AVD) running Android 10 (API version 29).
 
 > ***NOTE***
 >
-> Do not use the last version of Android, for this tutorial we are going to use Android 10 (API version 29).
+> Do not use Android 11, because `frida-server` does not work yet on this version.
 
-Download the latest frida-server from [Frida’s GitHub releases](https://github.com/frida/frida/releases) page and uncompress it with [7zip](https://www.7-zip.org/download.html), or on the Linux command line:
+Download the latest `frida-server` from [Frida’s GitHub releases](https://github.com/frida/frida/releases) page that **matches** the CPU architectutre of your Android device. If you are not sure about the CPU architecture check it by doing `adb shell` followed by `uname -m`.
+Then uncompress it with [7zip](https://www.7-zip.org/download.html), or on the Linux command line:
 
 ```Console
 user@linux:AFD2$ unxz frida-server-14.2.14-android-x86_64.xz
 ```
 
-> ***NOTE***
+> ***NOTE 1***
 >
-> If your are using a physical Android device, download the `arm64` version of the file, instead of `x86_64`.
+> Be aware that your emulator might be `x86` (32 bits) instead of the `x86_64` (64 bits) that is used in this tutorial.
 
-Now, make sure the AVD is running and push `frida-server` and run it as root:
+> ***NOTE 2***
+>
+> If your are using a physical Android device, the CPU architecture could be `armv8l`,
+> in that case you should download the `arm64` version of the `frida-server`.
+
+Now, make sure your Android device is connected, copy `frida-server` to your device and run it as root, as shown here:
 
 ```Console
 user@linux:AFD2$ adb devices   
@@ -125,11 +131,11 @@ emulator-5554   device
 user@linux:AFD2$ adb push ./frida-server-14.2.14-android-x86_64 /sdcard/Download/
 ./frida-server-14.2.14-android-x86_64/: 1 file pushed. 99.8 MB/s (41358640 bytes in 0.395s)
 user@linux:AFD2$ adb shell 
-generic_x86_64_arm64:/ $ su
-generic_x86_64_arm64:/ # cd /data/local/tmp
-generic_x86_64_arm64:/data/local/tmp # cp /sdcard/Download/frida-server-14.2.14-android-x86_64 frida-server
-generic_x86_64_arm64:/data/local/tmp # chmod 755 frida-server
-generic_x86_64_arm64:/data/local/tmp # ./frida-server &
+generic_x86_64:/ $ su
+generic_x86_64:/ # cd /data/local/tmp
+generic_x86_64:/data/local/tmp # cp /sdcard/Download/frida-server-14.2.14-android-x86_64 frida-server
+generic_x86_64:/data/local/tmp # chmod 755 frida-server
+generic_x86_64:/data/local/tmp # ./frida-server &
 [1] 6268
 ```
 
@@ -149,11 +155,15 @@ PID  Name
 
 > ***NOTE***
 >
-> If you installed Frida with `pip` you may need to add `$HOME/.local/bin` to the PATH:
+> If you installed Frida with `pip` you may need to add its location to the PATH:
 >
 > ```Console
 > user@linux:AFD2$ export $PATH:$HOME/.local/bin
 > ```
+>
+> On Windows, the default `PATH` to `pip` installed tools is (adapt according to your Python version):
+>
+> `C:\Users\<username>\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\Scripts` 
 
 ### Intercept networt traffic from APPS with certificate pinning
 
@@ -195,7 +205,7 @@ Spawned `com.android.chrome`. Resuming main thread!
 ...
 ```
 
-If everything is working as expected, you should now see `POST` and `GET` on Fiddler's windows. On Fiddler, select the packets you want and export them to latter inspect them.
+If everything is working as expected, you should now see `POST` and `GET` requests on Fiddler's windows. On Fiddler, select the packets you want and export them to latter inspect them.
 
 ![Fiddler example](imgs/Fiddler-post.png)
 
@@ -206,4 +216,5 @@ If everything is working as expected, you should now see `POST` and `GET` on Fid
 > If the certificate pinning bypass is not working for your mobile app, try:
 >
 > - with an older version of the app itself,
-> - or, run it with an older version of Android.
+> - or, use an older version of Android,
+> - or both an older version of the app and older version of Android.
