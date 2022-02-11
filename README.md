@@ -15,7 +15,7 @@ How to intercept network trafic on Android
   - [Install Frida on the PC](#install-frida-on-the-pc)
   - [Install Frida on Android](#install-frida-on-android)
   - [Intercept networt traffic from APPS with certificate pinning](#intercept-networt-traffic-from-apps-with-certificate-pinning)
-- [Configuration -- Using a proxy on a computer (alternative way)](#configuration----using-a-proxy-on-a-computer-alternative-way)
+- [Configuration -- Using a proxy on a computer (optional)](#configuration----using-a-proxy-on-a-computer-optional)
   - [On the computer](#on-the-computer)
   - [On the Android device](#on-the-android-device)
 
@@ -248,7 +248,7 @@ If everything is working as expected, you should now see some `SSL` packets on P
 > - or both an older version of the app and older version of Android.
 
 
-## Configuration -- Using a proxy on a computer (alternative way)
+## Configuration -- Using a proxy on a computer (optional)
 
 If you prefer to see, and save the packets with Wireshark, use the method described bellow instead of Packet Capture.
 
@@ -264,7 +264,7 @@ user@linux:~$ ./PolarProxy --certhttp 8088 --httpconnect 8866 -w - | wireshark -
 ...
 ```
 
-On a browser type `localhost:8088` to download PolarProxy's digital certificate. Then install it as shown in the next section.
+On a browser type `localhost:8088` to download PolarProxy's digital certificate. Then install it as explained above. The next section describes the Android configuration to use a proxy.
 
 ### On the Android device
 
