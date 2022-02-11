@@ -258,7 +258,7 @@ Install [PolarProxy](https://www.netresec.com/?page=PolarProxy)and Wireshark on 
 
 
 ```Console
-user@linux:~$ ./PolarProxy --certhttp 8088 --httpconnect 8080 -w - | wireshark -k -i -
+user@linux:~$ ./PolarProxy --certhttp 8088 --httpconnect 8866 -w - | wireshark -k -i -
 <6>Starting PolarProxy 0.9.0.0
 <6>[8080] HTTP CONNECT proxy listening on: 0.0.0.0:8080
 ...
