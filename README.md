@@ -14,7 +14,9 @@ How to intercept network trafic on Android
   - [Install Frida on the PC](#install-frida-on-the-pc)
   - [Install Frida on Android](#install-frida-on-android)
   - [Intercept networt traffic from APPS with certificate pinning](#intercept-networt-traffic-from-apps-with-certificate-pinning)
-- [Exercise](#exercise)
+- [Exercises](#exercises)
+  - [Exercise 1](#exercise-1)
+  - [Exercise 2](#exercise-2)
 
 ## Requirements
 
@@ -235,7 +237,9 @@ If everything is working as expected, you should now be able to read the content
 > - or, use an older version of Android,
 > - or both an older version of the app and older version of Android.
 
-## Exercise
+## Exercises
+
+### Exercise 1
 
 On the AVD open Chome and access to `https://ead.ipleiria.pt`
 
@@ -243,3 +247,13 @@ On the AVD open Chome and access to `https://ead.ipleiria.pt`
   - for the username: `Asdrubal`
   - for the password: `loves AFD2!!`
 - go to the HTTP Toolkit interface on your computer and find the packet that contains the username and password.
+
+### Exercise 2
+
+Execute the following tutorials:
+
+- mandatory
+  - [Solving OWASP MSTG UnCrackable App for Android Level 1](https://nibarius.github.io/learning-frida/2020/05/16/uncrackable1)
+- optional
+  - [Solving OWASP MSTG UnCrackable App for Android Level 2](https://nibarius.github.io/learning-frida/2020/05/23/uncrackable2)
+  - [Solving OWASP MSTG UnCrackable App for Android Level 3](https://nibarius.github.io/learning-frida/2020/06/05/uncrackable3)
