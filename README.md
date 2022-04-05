@@ -1,7 +1,7 @@
 # Tutorial: Android Network Traffic Interception <!-- omit in toc -->
 How to intercept network trafic on Android 
 
-| Version | 2022.04.04 |
+| Version | 2022.04.05 |
 | :-:     | :--        |
 | ![by-nc-sa](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png) | This work is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/) |
 
@@ -17,6 +17,7 @@ How to intercept network trafic on Android
 - [Exercises](#exercises)
   - [Exercise 1](#exercise-1)
   - [Exercise 2](#exercise-2)
+- [Recommended reading](#recommended-reading)
 
 ## Requirements
 
@@ -254,6 +255,12 @@ Execute the following tutorials:
 
 - mandatory
   - [Solving OWASP MSTG UnCrackable App for Android Level 1](https://nibarius.github.io/learning-frida/2020/05/16/uncrackable1)
+  - [Solving OWASP UnCrackable Android App Level 1 with Runtime Mobile Security (RMS)](https://github.com/m0bilesecurity/RMS-Runtime-Mobile-Security)
 - optional
   - [Solving OWASP MSTG UnCrackable App for Android Level 2](https://nibarius.github.io/learning-frida/2020/05/23/uncrackable2)
   - [Solving OWASP MSTG UnCrackable App for Android Level 3](https://nibarius.github.io/learning-frida/2020/06/05/uncrackable3)
+
+
+## Recommended reading
+
+- [Introduction to the Mobile Security Testing Guide](https://mobile-security.gitbook.io/mobile-security-testing-guide/overview/0x03-overview)
