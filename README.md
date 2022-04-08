@@ -16,7 +16,7 @@ How to intercept network trafic on Android
   - [Intercept networt traffic from APPS with certificate pinning](#intercept-networt-traffic-from-apps-with-certificate-pinning)
 - [Exercises](#exercises)
   - [Exercise 1](#exercise-1)
-  - [Exercise 2](#exercise-2)
+  - [Exercise 2 (Optional)](#exercise-2-optional)
 - [Recommended reading](#recommended-reading)
 
 ## Requirements
@@ -249,16 +249,15 @@ On the AVD open Chome and access to `https://ead.ipleiria.pt`
   - for the password: `loves AFD2!!`
 - go to the HTTP Toolkit interface on your computer and find the packet that contains the username and password.
 
-### Exercise 2
+### Exercise 2 (Optional)
 
 Execute the following tutorials:
 
-- mandatory
-  - [Solving OWASP MSTG UnCrackable App for Android Level 1](https://nibarius.github.io/learning-frida/2020/05/16/uncrackable1)
-  - [Solving OWASP UnCrackable Android App Level 1 with Runtime Mobile Security (RMS)](https://github.com/m0bilesecurity/RMS-Runtime-Mobile-Security)
-- optional
-  - [Solving OWASP MSTG UnCrackable App for Android Level 2](https://nibarius.github.io/learning-frida/2020/05/23/uncrackable2)
-  - [Solving OWASP MSTG UnCrackable App for Android Level 3](https://nibarius.github.io/learning-frida/2020/06/05/uncrackable3)
+
+- [Solving OWASP UnCrackable Android App Level 1 with Runtime Mobile Security (RMS)](https://github.com/m0bilesecurity/RMS-Runtime-Mobile-Security)
+- [Solving OWASP MSTG UnCrackable App for Android Level 1](https://nibarius.github.io/learning-frida/2020/05/16/uncrackable1)
+- [Solving OWASP MSTG UnCrackable App for Android Level 2](https://nibarius.github.io/learning-frida/2020/05/23/uncrackable2)
+- [Solving OWASP MSTG UnCrackable App for Android Level 3](https://nibarius.github.io/learning-frida/2020/06/05/uncrackable3)
 
 
 ## Recommended reading
