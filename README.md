@@ -104,6 +104,7 @@ To [install Frida](https://frida.re/docs/installation/) we need to have the late
 > > pip install virtualenv
 > > virtualenv frida14
 > > source frida14/bin/activate
+> ```
 
 Install `frida-tools` (the binaries are in the [Frida’s GitHub releases](https://github.com/frida/frida/releases))
 
