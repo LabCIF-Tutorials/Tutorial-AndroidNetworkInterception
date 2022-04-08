@@ -97,7 +97,7 @@ To [install Frida](https://frida.re/docs/installation/) we need to have the late
 
 > ***NOTE***
 > 
-> In case you which to have more than one version of `frida-tools` on the same computer
+> In case you whish to have more than one version of `frida-tools` on the same computer
 > create first a Python virtual environment:
 > 
 > ```Console
