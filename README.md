@@ -180,6 +180,7 @@ Open a new terminal and test if Frida is running:
 > ***NOTE***
 >
 > If you need to terminate `frida-server` do (replace `8888` to the actual PID):
+> 
 > ```Console
 > > adb shell
 > generic_x86_64:/ $ su
