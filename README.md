@@ -1,7 +1,7 @@
 # Tutorial: Android Network Traffic Interception <!-- omit in toc -->
 How to intercept network trafic on Android 
 
-| Version | 2022.04.05 |
+| Version | 2022.04.08 |
 | :-:     | :--        |
 | ![by-nc-sa](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png) | This work is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/) |
 
@@ -24,8 +24,11 @@ How to intercept network trafic on Android
 In order to implement this tutorial you need to use one of these Android devices:
 
 - Android Virtual Device (AVD) -- see one of these tutorials: [Android Studio Emulator - GUI](https://labcif.github.io/AndroidStudioEmulator-GUIconfig/), or [Android Studio Emulator - command line](https://labcif.github.io/AndroidStudioEmulator-cmdConfig/) to learn how to set up an AVD;
-  - Android 11 (API version 30), or older, is recommended for this tutorial
+  - Android 11 (API version 30) was used for this tutorial
 - or a physical smartphone with Android rooted. Rooting an Android device is beyond the scope of this tutorial, but you can read this [webpage](https://magiskmanager.com/) to learn more about it.
+- Python 3.x
+  - Linux: already installed in most Linux distributions
+  - Windows: download from [python.org](https://www.python.org/downloads/windows/)
 
 > ***NOTE***
 >
@@ -90,30 +93,33 @@ In order to bypass certificate pinning we need to dynammicly change the network 
 
 ### Install Frida on the PC
 
-To [install Frida](https://frida.re/docs/installation/) we need to have the latest Python 3.x. Then install Frida via `pip` tool:
-
-```Console
-pip install frida-tools
-```
-
-Or grab the binaries from [Frida’s GitHub releases](https://github.com/frida/frida/releases) page.
+To [install Frida](https://frida.re/docs/installation/) we need to have the latest Python 3.x. The latest `frida` version (15.x.x) doesn't work well on Android Emulator, so we're going to install the older version 14.2.18.
 
 > ***NOTE***
->
-> On Windows, it is useful to add the frida-tools to the path on the system environment variables, go to: `Control Panel > System > Advanced System Settings > Environment Variables`. Then add the parent folder in which Frida is installed: `C:\Users\<username>\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\Scripts\` (adapt accordingly to your  Python version)
-
-> ***NOTE ***
->
-> If you installed Frida with `pip` you may need to add its location to the PATH:
->
+> 
+> In case you which to have more than one version of `frida-tools` on the same computer
+> create first a Python virtual environment:
+> 
 > ```Console
-> user@linux:AFD2$ export $PATH:$HOME/.local/bin
-> ```
->
-> On Windows, go to: `Control Panel > System > Advanced System Settings > Environment Variables` and add the default `PATH` to `pip` installed tools:
->
-> `C:\Users\<username>\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\Scripts` (adapt according to your Python version)
+> > pip install virtualenv
+> > virtualenv frida14
+> > source frida14/bin/activate
 
+Install `frida-tools` (the binaries are in the [Frida’s GitHub releases](https://github.com/frida/frida/releases))
+
+```Console
+> pip install frida-tools==9.2.5
+> frida --version
+14.2.18
+```
+
+It is useful to add the `frida-tools` to the path on the system environment variables:
+
+- on Windows go to: `Control Panel > System > Advanced System Settings > Environment Variables`. Then add the parent folder in which Frida is installed: `C:\Users\<username>\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\Scripts\` (adapt accordingly to your  Python version)
+- on Linux do:
+  ```Console
+  user@linux:~$ export $PATH:$HOME/.local/bin
+  ```
 
 ### Install Frida on Android
 
@@ -131,7 +137,7 @@ Download the `frida-server` from [Frida’s GitHub releases](https://github.com/
 Then uncompress it with [**7zip**](https://www.7-zip.org/download.html), or on the Linux command line:
 
 ```Console
-user@linux:AFD2$ unxz frida-server-15.1.16-android-x86_64.xz
+user@linux:~$ unxz frida-server-14.2.18-android-x86_64.xz
 ```
 
 > ***NOTE***
@@ -144,24 +150,24 @@ user@linux:AFD2$ unxz frida-server-15.1.16-android-x86_64.xz
 Now, make sure your Android device is connected, copy `frida-server` to your device and run it as root, as shown here:
 
 ```Console
-user@linux:AFD2$ adb devices
+> adb devices
 List of devices attached
 emulator-5554   device
-user@linux:AFD2$ adb push ./frida-server-15.1.16-android-x86_64 /sdcard/Download/
-./frida-server-15.1.16-android-x86_64/: 1 file pushed. 99.8 MB/s (41358640 bytes in 0.395s)
-user@linux:AFD2$ adb shell 
+> adb push ./frida-server-14.2.18-android-x86_64 /sdcard/Download/
+./frida-server-14.2.18-android-x86_64/: 1 file pushed. 99.8 MB/s (41358640 bytes in 0.395s)
+> adb shell 
 generic_x86_64:/ $ su
 generic_x86_64:/ # cd /data/local/tmp
-generic_x86_64:/data/local/tmp # cp /sdcard/Download/frida-server-15.1.16-android-x86_64 .
-generic_x86_64:/data/local/tmp # chmod 755 frida-server-15.1.16-android-x86_64
-generic_x86_64:/data/local/tmp # ./frida-server-15.1.16-android-x86_64 &
+generic_x86_64:/data/local/tmp # cp /sdcard/Download/frida-server-14.2.18-android-x86_64 .
+generic_x86_64:/data/local/tmp # chmod 755 frida-server-14.2.18-android-x86_64
+generic_x86_64:/data/local/tmp # ./frida-server-14.2.18-android-x86_64 &
 [1] 6268
 ```
 
 Open a new terminal and test if Frida is running:
 
 ```Console
-user@linux:AFD2$ frida-ps -Uai
+> frida-ps -Uai
 4914  Chrome                   com.android.chrome                     
 1358  Google                   com.google.android.googlequicksearchbox
 1358  Google                   com.google.android.googlequicksearchbox
@@ -173,39 +179,48 @@ user@linux:AFD2$ frida-ps -Uai
 
 > ***NOTE***
 >
-> If you need to terminate `frida-server` do (change `8888` to the actual PID):
+> If you need to terminate `frida-server` do (replace `8888` to the actual PID):
 > ```Console
-> user@linux:AFD2$ adb shell
-> a40:/ $ su
-> a40:/ # ps -e | grep frida-server
+> > adb shell
+> generic_x86_64:/ $ su
+> generic_x86_64:/ # ps -e | grep frida-server
 > root          8888     1  139456   4416 poll_schedule_timeout 79c0dce088 S frida-server
-> kill -9 8888
+> generic_x86_64:/ # kill -9 8888
 > ```
 
 ### Intercept networt traffic from APPS with certificate pinning
 
-Suppose we want to bypass Google Chrome certificate pinning, the first step is to identify the package name:
+Download the latest version of [pinning-demo.apk](https://github.com/httptoolkit/android-ssl-pinning-demo/releases/tag/v1.2.1). This app has several buttons, each with a different implementation of certificate pinning mechanism. Install it on Android emulator:
 
 ```Console
-user@linux:AFD2$ frida-ps -U | grep chrome
-6061  com.android.chrome
-6415  com.android.chrome:privileged_process0
-6394  com.android.chrome:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:5
-6384  com.android.chrome_zygote
+> adb install pinning-demo.apk
+Success
 ```
 
-Then apply the `javascript` that enables to bypass certificate pinning with Frida. In the computer run:
+With the `HTTP Tollkit` still running, open the `SSL Pinning Demo` app and press all the buttons:
+
+![](imgs/ssl-pinning-demo-red.png)
+
+You'll see 5 of 6 buttons in red, because the app was able to detect a different digital certificate from the one it was expecting. Now, lets use `frida` bypass `SSL Pinning Demo` certificate pinning. 
+
+1. The first step is to identify the package name:
+  ```Console
+  user@linux:~$ frida-ps -U | grep pinning
+  4402  tech.httptoolkit.pinning_demo
+  ```
+
+2. Then apply the `javascript` that enables to bypass certificate pinning with Frida. In the computer run:
+
+  ```Console
+  > frida -U --no-pause --codeshare akabe1/frida-multiple-unpinning -f <mobile-app-name>
+  ```
+
+For the `SSL Pinning Demo` app:
 
 ```Console
-user@linux:~$ frida -U --codeshare akabe1/frida-multiple-unpinning -f <mobile-app-name> --no-pause
-```
-
-For the Google Chrome browser:
-
-```Console
-user@linux:~$ frida -U --codeshare akabe1/frida-multiple-unpinning -f com.android.chrome 
+> frida -U --no-pause --codeshare akabe1/frida-multiple-unpinning -f tech.httptoolkit.pinning_demo
      ____
-    / _  |   Frida 15.1.16 - A world-class dynamic instrumentation toolkit
+    / _  |   Frida 14.2.18 - A world-class dynamic instrumentation toolkit
    | (_| |
     > _  |   Commands:
    /_/ |_|       help      -> Displays the help system
@@ -213,24 +228,24 @@ user@linux:~$ frida -U --codeshare akabe1/frida-multiple-unpinning -f com.androi
    . . . .       exit/quit -> Exit
    . . . .
    . . . .   More info at https://frida.re/docs/home/
-   . . . .
-   . . . .   Connected to Android Emulator 5554 (id=emulator-5554)
-Spawned `com.android.chrome`. Use %resume to let the main thread start executing!
-[Android Emulator 5554::com.android.chrome ]-> %resume
-[Android Emulator 5554::com.android.chrome ]->
+Spawned `tech.httptoolkit.pinning_demo`. Resuming main thread!          
+[Android Emulator 5554::tech.httptoolkit.pinning_demo]->
 ======
 [#] Android Bypass for various Certificate Pinning methods [#]
 ======
-[-] OkHTTPv3 {1} pinner not found
+[-] OkHTTPv3 {2} pinner not found
 ...
 ```
 
-If everything is working as expected, you should now be able to read the content of the `SSL` packets.
+3. Now press all the buttons again. If everything is working as expected, you should now be able to get 4 green buttons:
+
+![](imgs/ssl-pinning-demo-green.png)
 
 
 > ***NOTE***
 >
-> Frida is able to avoid certificate pinning from many Android apps, **but not all of them**. For example, Tiktok is known to have implemented some technics against Frida and other similar tools.
+> Frida is able to avoid certificate pinning from many Android apps, **but not all of them**. 
+> For example, Tiktok is known to have implemented some technics against Frida and other similar tools.
 >
 > If the certificate pinning bypass is not working for your mobile app, try:
 >
@@ -242,12 +257,12 @@ If everything is working as expected, you should now be able to read the content
 
 ### Exercise 1
 
-On the AVD open Chome and access to `https://ead.ipleiria.pt`
-
-- then, on the login page type:
-  - for the username: `Asdrubal`
-  - for the password: `loves AFD2!!`
-- go to the HTTP Toolkit interface on your computer and find the packet that contains the username and password.
+1. apply the `frida` script to the Google Chrome browser
+2. access to `https://ead.ipleiria.pt`
+   - then, on the login page type:
+     - for the username: `Asdrubal`
+     - for the password: `loves AFD2!!`
+3. go to the HTTP Toolkit interface on your computer and find the packet that contains the username and password.
 
 ### Exercise 2 (Optional)
 
@@ -263,4 +278,5 @@ Execute the following tutorials:
 ## Recommended reading
 
 - [Intercepting Android Emulator TLS traffic with magisk](https://infosecwriteups.com/intercepting-android-emulator-ssl-traffic-with-burp-using-magisk-bc948dca68f9)
+  - this tutorial teachs how to root an Android emulator in order to install any CA digital certificate as `system trusted`, required for Android 11
 - [Introduction to the Mobile Security Testing Guide](https://mobile-security.gitbook.io/mobile-security-testing-guide/overview/0x03-overview)
