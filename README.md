@@ -263,4 +263,5 @@ Execute the following tutorials:
 
 ## Recommended reading
 
+- [Intercepting Android Emulator TLS traffic with magisk](https://infosecwriteups.com/intercepting-android-emulator-ssl-traffic-with-burp-using-magisk-bc948dca68f9)
 - [Introduction to the Mobile Security Testing Guide](https://mobile-security.gitbook.io/mobile-security-testing-guide/overview/0x03-overview)
