@@ -1,7 +1,7 @@
 # Tutorial: Android Network Traffic Interception <!-- omit in toc -->
 How to intercept network trafic on Android 
 
-| Version | 2022.04.08 |
+| Version | 2023.03.31 |
 | :-:     | :--        |
 | ![by-nc-sa](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png) | This work is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/) |
 
@@ -23,7 +23,7 @@ How to intercept network trafic on Android
 
 In order to implement this tutorial you need to use one of these Android devices:
 
-- Android Virtual Device (AVD) -- see one of these tutorials: [Android Studio Emulator - GUI](https://labcif.github.io/AndroidStudioEmulator-GUIconfig/), or [Android Studio Emulator - command line](https://labcif.github.io/AndroidStudioEmulator-cmdConfig/) to learn how to set up an AVD;
+- Android Virtual Device (AVD) -- see one of these tutorials: [Android Studio Emulator - GUI](https://labcif-tutorials.github.io/AndroidStudioEmulator-GUIconfig/), or [Android Studio Emulator - command line](https://labcif-tutorials.github.io/AndroidStudioEmulator-cmdConfig/) to learn how to set up an AVD;
   - Android 11 (API version 30) was used for this tutorial
 - or a physical smartphone with Android rooted. Rooting an Android device is beyond the scope of this tutorial, but you can read this [webpage](https://magiskmanager.com/) to learn more about it.
 - Python 3.x
@@ -93,7 +93,8 @@ In order to bypass certificate pinning we need to dynammicly change the network 
 
 ### Install Frida on the PC
 
-To [install Frida](https://frida.re/docs/installation/) we need to have the latest Python 3.x. The latest `frida` version (15.x.x) doesn't work well on Android Emulator, so we're going to install the older version 14.2.18.
+To [install Frida](https://frida.re/docs/installation/) we need to have the latest Python 3.x.
+Let's install the latest `frida` version, which is presently 16.0.11.
 
 > ***NOTE***
 > 
@@ -109,9 +110,9 @@ To [install Frida](https://frida.re/docs/installation/) we need to have the late
 Install `frida-tools` (the binaries are in the [Frida’s GitHub releases](https://github.com/frida/frida/releases))
 
 ```Console
-> pip install frida-tools==9.2.5
+> pip install frida-tools
 > frida --version
-14.2.18
+16.0.11
 ```
 
 It is useful to add the `frida-tools` to the path on the system environment variables:
@@ -138,7 +139,7 @@ Download the `frida-server` from [Frida’s GitHub releases](https://github.com/
 Then uncompress it with [**7zip**](https://www.7-zip.org/download.html), or on the Linux command line:
 
 ```Console
-user@linux:~$ unxz frida-server-14.2.18-android-x86_64.xz
+user@linux:~$ unxz frida-server-16.0.11-android-x86_64.xz
 ```
 
 > ***NOTE***
@@ -154,14 +155,14 @@ Now, make sure your Android device is connected, copy `frida-server` to your dev
 > adb devices
 List of devices attached
 emulator-5554   device
-> adb push ./frida-server-14.2.18-android-x86_64 /sdcard/Download/
-./frida-server-14.2.18-android-x86_64/: 1 file pushed. 99.8 MB/s (41358640 bytes in 0.395s)
+> adb push ./frida-server-16.0.11-android-x86_64 /sdcard/Download/
+./frida-server-16.0.11-android-x86_64/: 1 file pushed. 99.8 MB/s (41358640 bytes in 0.395s)
 > adb shell 
-generic_x86_64:/ $ su
-generic_x86_64:/ # cd /data/local/tmp
-generic_x86_64:/data/local/tmp # cp /sdcard/Download/frida-server-14.2.18-android-x86_64 .
-generic_x86_64:/data/local/tmp # chmod 755 frida-server-14.2.18-android-x86_64
-generic_x86_64:/data/local/tmp # ./frida-server-14.2.18-android-x86_64 &
+generic_x86_64_arm64:/ $ su
+generic_x86_64_arm64:/ # cd /data/local/tmp
+generic_x86_64_arm64:/data/local/tmp # cp /sdcard/Download/frida-server-16.0.11-android-x86_64 .
+generic_x86_64_arm64:/data/local/tmp # chmod +x frida-server-16.0.11-android-x86_64
+generic_x86_64_arm64:/data/local/tmp # ./frida-server-16.0.11-android-x86_64 &
 [1] 6268
 ```
 
@@ -169,12 +170,15 @@ Open a new terminal and test if Frida is running:
 
 ```Console
 > frida-ps -Uai
-4914  Chrome                   com.android.chrome                     
-1358  Google                   com.google.android.googlequicksearchbox
-1358  Google                   com.google.android.googlequicksearchbox
-4203  HTTP Toolkit             tech.httptoolkit.android.v1            
-3792  Phone                    com.android.dialer                     
-4784  Settings                 com.android.settings                   
+ PID  Name                     Identifier
+4  -----------------------  ---------------------------------------
+1614  Google                   com.google.android.googlequicksearchbox
+5405  HTTP Toolkit             tech.httptoolkit.android.v1
+2605  Messages                 com.google.android.apps.messaging
+4230  Phone                    com.android.dialer
+3037  Photos                   com.google.android.apps.photos
+4493  Settings                 com.android.settings
+4698  YouTube                  com.google.android.youtube
 ...
 ```
 
@@ -184,18 +188,19 @@ Open a new terminal and test if Frida is running:
 > 
 > ```Console
 > > adb shell
-> generic_x86_64:/ $ su
-> generic_x86_64:/ # ps -e | grep frida-server
-> root          8888     1  139456   4416 poll_schedule_timeout 79c0dce088 S frida-server
-> generic_x86_64:/ # kill -9 8888
+> generic_x86_64_arm64:/ $ su
+> generic_x86_64_arm64:/ # ps -e | grep frida-server
+> root    8888   5811 10874320 119644 do_sys_poll        0 S frida-server-16.0.11-android-x86_64
+> generic_x86_64_arm64:/ # kill -9 8888
 > ```
 
 ### Intercept networt traffic from APPS with certificate pinning
 
-Download the latest version of [pinning-demo.apk](https://github.com/httptoolkit/android-ssl-pinning-demo/releases/tag/v1.2.1). This app has several buttons, each with a different implementation of certificate pinning mechanism. Install it on Android emulator:
+Download the latest version of [pinning-demo.apk](https://github.com/httptoolkit/android-ssl-pinning-demo/releases/), presently v1.3.0. This app has several buttons, each with a different implementation of certificate pinning mechanism. Install it on Android emulator:
 
 ```Console
 > adb install pinning-demo.apk
+Performing Streamed Install
 Success
 ```
 
@@ -207,22 +212,22 @@ You'll see 5 of 6 buttons in red, because the app was able to detect a different
 
 1. The first step is to identify the package name:
   ```Console
-  user@linux:~$ frida-ps -U | grep pinning
-  4402  tech.httptoolkit.pinning_demo
+  user@linux:~$ frida-ps -aiU | grep pinning
+  6491  SSL Pinning Demo         tech.httptoolkit.pinning_demo
   ```
 
 2. Then apply the `javascript` that enables to bypass certificate pinning with Frida. In the computer run:
 
   ```Console
-  > frida -U --no-pause --codeshare akabe1/frida-multiple-unpinning -f <mobile-app-name>
+  > frida -U --codeshare akabe1/frida-multiple-unpinning -f <mobile-app-name>
   ```
 
 For the `SSL Pinning Demo` app:
 
 ```Console
-> frida -U --no-pause --codeshare akabe1/frida-multiple-unpinning -f tech.httptoolkit.pinning_demo
+> frida -U --codeshare akabe1/frida-multiple-unpinning -f tech.httptoolkit.pinning_demo
      ____
-    / _  |   Frida 14.2.18 - A world-class dynamic instrumentation toolkit
+    / _  |   Frida 16.0.11 - A world-class dynamic instrumentation toolkit
    | (_| |
     > _  |   Commands:
    /_/ |_|       help      -> Displays the help system
@@ -230,8 +235,10 @@ For the `SSL Pinning Demo` app:
    . . . .       exit/quit -> Exit
    . . . .
    . . . .   More info at https://frida.re/docs/home/
-Spawned `tech.httptoolkit.pinning_demo`. Resuming main thread!          
-[Android Emulator 5554::tech.httptoolkit.pinning_demo]->
+   . . . .
+   . . . .   Connected to Android Emulator 5554 (id=emulator-5554)
+Spawned `tech.httptoolkit.pinning_demo`. Resuming main thread!
+[Android Emulator 5554::tech.httptoolkit.pinning_demo ]->
 ======
 [#] Android Bypass for various Certificate Pinning methods [#]
 ======
@@ -239,9 +246,9 @@ Spawned `tech.httptoolkit.pinning_demo`. Resuming main thread!
 ...
 ```
 
-3. Now press all the buttons again. If everything is working as expected, you should now be able to get 4 green buttons:
+3. Now press all the buttons again. If everything is working as expected, you should now be able to get 5 (of 6) green buttons:
 
-![](imgs/ssl-pinning-demo-green.png)
+![](imgs/ssl-pinning-demo-greenv2.png)
 
 
 > ***NOTE***
