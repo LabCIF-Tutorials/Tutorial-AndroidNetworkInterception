@@ -262,6 +262,76 @@ Spawned `tech.httptoolkit.pinning_demo`. Resuming main thread!
 > - or, use an older version of Android,
 > - or both an older version of the app and older version of Android.
 
+
+### Injecting our code
+
+At this point, the "Manually Pinned Request" is still red because the app developer hard-coded the hash value of the server digital certificate. However, we can create and inject our code into the app to change its behaviour. However, we can create and inject our code into the app to change its behaviour. To this end, we need to know its source code, which is available [where](https://github.com/httptoolkit/android-ssl-pinning-demo/blob/main/app/src/main/java/tech/httptoolkit/pinning_demo/MainActivity.kt).
+
+  On line `32` we have the hash value of *Let's Encrypt* digital certificate. Let's Encrypt is the CA that signed the website digital certificate to which the app connects:
+
+```kotlin
+const val LETS_ENCRYPT_ROOT_SHA256 = "NgJeUutmfGsIONh0XaovCA5VJ05uv2gCb27pUOpTPxU="
+```
+
+
+On line `221` we have the function responsible for the manual certificate pinning:
+
+```kotlin
+fun sendManuallyCustomPinned(view: View) {
+```
+
+Then, on line `242`we have a call to compare the hash values of the digital certificates:
+```kotlin
+if (!certs.any { cert -> doesCertMatchPin(LETS_ENCRYPT_ROOT_SHA256, cert) }) {
+```
+
+The code of the `doesCertMatchPin()` function is:
+```kotlin
+private fun doesCertMatchPin(pin: String, cert: Certificate): Boolean {
+    val certHash = cert.publicKey.encoded.toByteString().sha256()
+    return certHash == pin.decodeBase64()
+}
+```
+
+We aim to change the function `doesCertMatchPin()` to ensure it will always return `true`. This way, we can get the last button green while still being able to intercept the network connection.
+
+First create the file `manual.js` then copy/paste the following javascript code:
+
+```javascript
+Java.perform(function() {
+  Java.use("tech.httptoolkit.pinning_demo.MainActivity").doesCertMatchPin.implementation = function(s,t) {
+    console.log("Manual pinning surpassed " + s + t);
+    return true;
+  }
+});
+```
+
+Explanation of the code:
+
+- `tech.httptoolkit.pinning_demo` is the name of the app
+- `MainActivity` is the name of the activity where our function is executed
+- `doesCertMatchPin.implementation` replace the code of function `doesCertMatchPin` by this code:
+```kotlin
+  function(s,t) {
+      console.log("Manual pinning surpassed " + s + t);
+      return true;
+    }
+```
+  - `s,t` are input variables, in this case `LETS_ENCRYPT_ROOT_SHA256, cert`
+  - `console.log(...)` print to Frida console
+  - `return true;` always return true
+
+
+Now, let's inject our code into the app:
+
+```Bash
+frida -U --codeshare akabe1/frida-multiple-unpinning -l manual.js -f tech.httptoolkit.pinning_demo
+```
+
+This should be the result:
+![](imgs/ssl-pinning-demo-all-green.png)
+
+
 ## Exercises
 
 ### Exercise 1
