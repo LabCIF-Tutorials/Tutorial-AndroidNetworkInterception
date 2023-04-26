@@ -322,13 +322,14 @@ Explanation of the code:
   - `return true;` always return true
 
 
-Now, let's inject our code into the app:
+Now, let's inject our code into the app by adding `-l manual.js` to the `frida` command:
 
 ```Bash
 frida -U --codeshare akabe1/frida-multiple-unpinning -l manual.js -f tech.httptoolkit.pinning_demo
 ```
 
 This should be the result:
+
 ![](imgs/ssl-pinning-demo-all-green.png)
 
 
