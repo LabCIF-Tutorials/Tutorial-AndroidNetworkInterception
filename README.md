@@ -9,7 +9,7 @@ How to intercept network trafic on Android
 
 - [Requirements](#requirements)
 - [Methods](#methods)
-- [HttpTolkit](#httptolkit)
+- [Http Toolkit](#http-toolkit)
 - [Bypass Certificate Pinning](#bypass-certificate-pinning)
   - [Install Frida on the PC](#install-frida-on-the-pc)
   - [Install Frida on Android](#install-frida-on-android)
@@ -46,7 +46,7 @@ To intercept the network traffic of an Android device we need a proxy. The proxy
 
 **Using a fake VPN on Android** -- this is the simplest way to intercept traffic, and it allows choosing just one app to be redirected and captured. On one hand, no root permission is required, on the other hand it might require extra steps to download the captured packets to a computer.
 
-## HttpTolkit
+## Http Toolkit
 
 For this tutorial we are going to use HTTP Toolkit that sets up a fake VPN service. Download [HTTP Toolkit](https://httptoolkit.tech/) (it's available for Linux, MacOS and Windows) and then install it on your computer.
 
